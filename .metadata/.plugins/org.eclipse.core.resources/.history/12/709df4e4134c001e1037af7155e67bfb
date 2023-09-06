@@ -1,0 +1,52 @@
+package ProfileDashboard;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import Database.DatabaseConnection;
+
+public class changePassword extends JPanel {
+
+    private static final long serialVersionUID = 1L;
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/cdrs";
+    private static final String DB_USER = "root";
+    private static final String DB_PASS = "santosh";
+    
+    private String username; // Store the username
+
+    // Constructor that accepts the username
+    public changePassword(String username) {
+        this.username = username;
+    }
+
+    public void createAndShowMainFrame() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        // Retrieve user profile details from the database using the stored username
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+            String query = "SELECT * FROM admin WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username); // Use the stored username
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                JLabel nameLabel = new JLabel("Name: " + resultSet.getString("full_name"));
+                // Add other profile details as you did before
+
+                add(nameLabel);
+                // Add other profile details to the panel
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            new DatabaseConnection();
+        }
+
+        // Add a password change section as previously shown
+    }
+}

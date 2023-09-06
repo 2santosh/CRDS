@@ -1,0 +1,137 @@
+package Police;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import ProfileDashboard.UserProfilePanel;
+import ProfileDashboard.changePassword;
+import ProfileDashboard.logout;
+
+public class PoMain {
+    private String Username;
+
+    // ... (other methods)
+
+    private void createAndShowMainFrame(String username) {
+        this.Username = username;
+        JFrame frame = new JFrame("Main Frame");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
+
+        // ... (header and user info code)
+
+        // Create the center area to display menu details
+        JPanel centerPanel = new JPanel();
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        centerPanel.setBackground(Color.WHITE);
+        centerPanel.setLayout(new GridLayout(2, 3, 20, 20));
+
+        // Query the database to fetch the desired data
+        int totalCriminals = fetchDataFromDatabase("SELECT COUNT(*) FROM criminals");
+        int totalPolice = fetchDataFromDatabase("SELECT COUNT(*) FROM police");
+        int totalCrimeCategories = fetchDataFromDatabase("SELECT COUNT(*) FROM crime_categories");
+        int totalPoliceStations = fetchDataFromDatabase("SELECT COUNT(*) FROM police_stations");
+        int totalFIRs = fetchDataFromDatabase("SELECT COUNT(*) FROM firs");
+
+        // Call createDataBox to display the data
+        createDataBox(centerPanel, "Total Criminals", String.valueOf(totalCriminals), "View All Criminals");
+        createDataBox(centerPanel, "Total Police", String.valueOf(totalPolice), "View All Police");
+        createDataBox(centerPanel, "Total Crime Categories", String.valueOf(totalCrimeCategories), "View All Crime Categories");
+        createDataBox(centerPanel, "Total Police Stations", String.valueOf(totalPoliceStations), "View All Police Stations");
+        createDataBox(centerPanel, "Total FIRs", String.valueOf(totalFIRs), "View All FIRs");
+
+        frame.add(centerPanel, BorderLayout.CENTER);
+        frame.add(menuPanel, BorderLayout.WEST);
+
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
+    }
+
+    private int fetchDataFromDatabase(String query) {
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/cdrs", "root", "S@nt0sh143")) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
+    private void createDataBox(JPanel container, String title, String value, String viewButtonText) {
+        JPanel dataBox = new JPanel();
+        dataBox.setBackground(Color.decode("#f4f4f4"));
+        dataBox.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        dataBox.setLayout(new BoxLayout(dataBox, BoxLayout.Y_AXIS));
+
+        JLabel titleLabel = new JLabel(title);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+        JLabel valueLabel = new JLabel(value);
+        valueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        valueLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+
+        JButton viewAllButton = new JButton(viewButtonText);
+        viewAllButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        viewAllButton.addActionListener(e -> {
+            if (viewButtonText.equals("View All Criminals")) {
+                viewAllCriminals();
+            } else if (viewButtonText.equals("View All Police")) {
+                viewAllPolice();
+            } else if (viewButtonText.equals("View All Crime Categories")) {
+                viewAllCrimeCategories();
+            } else if (viewButtonText.equals("View All Police Stations")) {
+                viewAllPoliceStations();
+            } else if (viewButtonText.equals("View All FIRs")) {
+                viewAllFIRs();
+            }
+        });
+
+        dataBox.add(titleLabel);
+        dataBox.add(Box.createVerticalStrut(10));
+        dataBox.add(valueLabel);
+        dataBox.add(Box.createVerticalStrut(10));
+        dataBox.add(viewAllButton);
+
+        container.add(dataBox);
+    }
+
+    private void viewAllCriminals() {
+        // ... (code to view all criminals)
+    }
+
+    private void viewAllPolice() {
+        // ... (code to view all police personnel)
+    }
+
+    private void viewAllCrimeCategories() {
+        // ... (code to view all crime categories)
+    }
+
+    private void viewAllPoliceStations() {
+        // ... (code to view all police stations)
+    }
+
+    private void viewAllFIRs() {
+        // ... (code to view all FIRs)
+    }
+
+    public static void main(String[] args) {
+        // Simulate user login with a username
+        String username = "YourUsername"; // Replace with actual username
+        PoMain poMain = new PoMain();
+        poMain.createAndShowMainFrame(username);
+    }
+}

@@ -1,0 +1,48 @@
+package View;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+
+public class viewCriminal {
+    private JFrame frame;
+    private JTable table;
+    private DefaultTableModel model;
+
+    public viewCriminal() {
+        initialize();
+    }
+
+    private void initialize() {
+        frame = new JFrame("Criminal Data");
+        frame.setBounds(100, 100, 800, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        model = new DefaultTableModel();
+        model.addColumn("Edit"); // Add an "Edit" column
+        model.addColumn("ID");
+        model.addColumn("Name");
+        model.addColumn("Age");
+        model.addColumn("Crime");
+
+        table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+    }
+
+    public void setVisible(boolean visible) {
+        frame.setVisible(visible);
+    }
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    viewCriminal window = new viewCriminal();
+                    window.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+}

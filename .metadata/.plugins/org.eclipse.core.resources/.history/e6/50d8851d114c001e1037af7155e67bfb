@@ -1,0 +1,65 @@
+package ProfileDashboard;
+import javax.swing.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import Database.DatabaseConnection;
+public class UserProfilePanel extends JPanel {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/cdrs";
+    private static final String DB_USER = "root";
+    private static final String DB_PASS = "santosh";
+	public static Object createAndShowMainFrame;
+
+    public void createAndShowMainFrame() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        // Retrieve user profile details from the database
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+            String query = "SELECT * FROM admin WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, "Admin"); // Replace with the actual username
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                JLabel nameLabel = new JLabel("Name: " + resultSet.getString("full_name"));
+                JLabel usernameLabel = new JLabel("Username: " + resultSet.getString("username"));
+                JLabel dobLabel = new JLabel("Date of Birth: " + resultSet.getString("dob"));
+                JLabel emailLabel = new JLabel("Email: " + resultSet.getString("email"));
+                JLabel phoneLabel = new JLabel("Phone: " + resultSet.getString("phone"));
+                JLabel permanentAddressLabel = new JLabel("Permanent Address: " + resultSet.getString("permanent_address"));
+                JLabel temporaryAddressLabel = new JLabel("Temporary Address: " + resultSet.getString("temporary_address"));
+                JLabel fatherNameLabel = new JLabel("Father's Name: " + resultSet.getString("father_name"));
+                JLabel motherNameLabel = new JLabel("Mother's Name: " + resultSet.getString("mother_name"));
+                JLabel maritalStatusLabel = new JLabel("Marital Status: " + resultSet.getString("marital_status"));
+                JLabel educationLabel = new JLabel("Education: " + resultSet.getString("education"));
+                JLabel jobJoinYearLabel = new JLabel("Job Join Year: " + resultSet.getInt("job_join_year"));
+                // Add more profile details as needed
+
+                add(nameLabel);
+                add(usernameLabel);
+                add(dobLabel);
+                add(emailLabel);
+                add(phoneLabel);
+                add(permanentAddressLabel);
+                add(temporaryAddressLabel);
+                add(fatherNameLabel);
+                add(motherNameLabel);
+                add(maritalStatusLabel);
+                add(educationLabel);
+                add(jobJoinYearLabel);
+                // Add more profile details to the panel
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            new DatabaseConnection();
+        }
+    }
+}

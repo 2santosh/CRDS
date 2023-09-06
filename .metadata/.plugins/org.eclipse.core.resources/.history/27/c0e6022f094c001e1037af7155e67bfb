@@ -1,0 +1,105 @@
+package Admin;
+import javax.swing.*;
+
+import ProfileDashboard.UserProfilePanel;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class AdMain {
+    private static final JFrame frame = new JFrame("Main Frame");
+    private static final JPanel centerPanel = new JPanel();
+    private static CardLayout cardLayout = new CardLayout();
+
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/cdrs";
+    private static final String DB_USER = "root";
+    private static final String DB_PASS = "santosh";
+
+    private static ImageIcon resizeImageIcon(ImageIcon icon, int width, int height) {
+        Image image = icon.getImage();
+
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.drawImage(image, 0, 0, width, height, null);
+        g2d.dispose();
+
+        return new ImageIcon(resizedImage);
+    }
+
+    public static void createAndShowMainFrame() {
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
+
+        // Create a top panel for header and user info
+        JPanel topPanel = new JPanel(new BorderLayout());
+
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(Color.lightGray);
+        int desiredLogoSize = 100;
+        ImageIcon logoImage = new ImageIcon("photo\\2.png");
+        ImageIcon resizedLogoImage = resizeImageIcon(logoImage, desiredLogoSize, desiredLogoSize);
+        JLabel logoLabel = new JLabel(resizedLogoImage);
+        headerPanel.add(logoLabel, BorderLayout.WEST);
+
+        JPanel companyInfoPanel = new JPanel(new BorderLayout());
+        JLabel companyNameLabel = new JLabel("CDRS Department");
+        JLabel companyAddressLabel = new JLabel("Tinkune, Kathmandu");
+        JLabel companyPhoneLabel = new JLabel("9823452423");
+        JLabel CompanyEmailLabel = new JLabel("CRDS@gmail.com");
+        companyInfoPanel.add(companyNameLabel, BorderLayout.NORTH);
+        companyInfoPanel.add(companyAddressLabel, BorderLayout.CENTER);
+        companyInfoPanel.add(companyPhoneLabel, BorderLayout.SOUTH);
+        companyInfoPanel.add(CompanyEmailLabel, BorderLayout.SOUTH);
+        headerPanel.add(companyInfoPanel, BorderLayout.CENTER);
+
+        JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        userPanel.setBackground(Color.decode("#f4f4f4"));
+
+        ImageIcon userLogoImage = new ImageIcon("photo\\2.png"); // Replace with the actual path
+        ImageIcon resizedUserLogoImage = resizeImageIcon(userLogoImage, 40, 40); // Adjust the size as needed
+        JLabel userLogoLabel = new JLabel(resizedUserLogoImage);
+
+        JLabel userNameLabel = new JLabel("Admin"); // Replace with the actual user name
+
+        userPanel.add(userNameLabel);
+        userPanel.add(userLogoLabel);
+
+        headerPanel.add(userPanel, BorderLayout.EAST);
+        topPanel.add(headerPanel, BorderLayout.CENTER);
+
+        frame.add(topPanel, BorderLayout.NORTH);
+
+        // Create a center panel with CardLayout for navigation
+        centerPanel.setLayout(cardLayout);
+
+        // Create panels for different views (e.g., View Profile, Change Password)
+        JPanel viewProfilePanel = new UserProfilePanel();
+        // Add these panels to the center panel with names
+        centerPanel.add(viewProfilePanel, "ViewProfile");
+
+        frame.add(centerPanel, BorderLayout.CENTER);
+
+        // ... (rest of the code for user menu and action listeners)
+
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            createAndShowMainFrame();
+        });
+    }
+}

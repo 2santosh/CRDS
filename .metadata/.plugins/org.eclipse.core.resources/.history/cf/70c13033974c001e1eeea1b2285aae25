@@ -1,0 +1,37 @@
+// DatabaseUtility.java
+
+package Database;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class DatabaseUtility {
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/cdrs";
+    private static final String DB_USER = "root";
+    private static final String DB_PASS = "santosh";
+
+    public boolean checkPassword(String username, String enteredPassword) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
+            String query = "SELECT password FROM users WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                String storedPassword = resultSet.getString("password");
+                // You should use a secure password hashing and comparison library here
+                // For simplicity, this example uses basic string comparison
+                return storedPassword.equals(enteredPassword);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false; // Return false if there was an error or if the user doesn't exist
+    }
+
+    // Implement other methods like retrieveUserInfo and updatePassword as needed
+}

@@ -1,0 +1,117 @@
+package Police;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import Dashboard.ForgetPasswordPanel;
+import Main.MainPage;
+
+public class PoLogin {
+    private static final ForgetPasswordPanel ForgetPasswordDialog = null;
+    private static int loginAttempts = 0;
+
+    public static JPanel createLoginPanel(JFrame mainFrame) {
+        JPanel loginPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints loginGbc = new GridBagConstraints();
+        loginGbc.insets = new Insets(10, 10, 10, 10);
+
+        JLabel usernameLabel = new JLabel("Username:");
+        JTextField usernameField = new JTextField(20);
+
+        JLabel passwordLabel = new JLabel("Password:");
+        JPasswordField passwordField = new JPasswordField(20);
+
+        JButton loginButton = new JButton("Login");
+        JButton goBackButton = new JButton("Go Back");
+
+        goBackButton.addActionListener(e -> {
+            SwingUtilities.invokeLater(() -> {
+                MainPage.createAndShowUI();
+                mainFrame.dispose();
+            });
+        });
+
+        loginButton.addActionListener(e -> performLogin(mainFrame, usernameField, passwordField));
+
+        // Bind the "Enter" key to the loginButton when username or password fields are focused
+        InputMap inputMap = loginPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = loginPanel.getActionMap();
+
+        KeyStroke enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+        inputMap.put(enterKey, "login");
+        actionMap.put("login", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                performLogin(mainFrame, usernameField, passwordField);
+            }
+        });
+
+        loginGbc.gridx = 0;
+        loginGbc.gridy = 0;
+        loginPanel.add(usernameLabel, loginGbc);
+
+        loginGbc.gridx = 1;
+        loginGbc.gridy = 0;
+        loginPanel.add(usernameField, loginGbc);
+
+        loginGbc.gridx = 0;
+        loginGbc.gridy = 1;
+        loginPanel.add(passwordLabel, loginGbc);
+
+        loginGbc.gridx = 1;
+        loginGbc.gridy = 1;
+        loginPanel.add(passwordField, loginGbc);
+
+        loginGbc.gridx = 1;
+        loginGbc.gridy = 2;
+        loginGbc.anchor = GridBagConstraints.EAST;
+        loginPanel.add(loginButton, loginGbc);
+
+        loginGbc.gridx = 1;
+        loginGbc.gridy = 2;
+        loginGbc.anchor = GridBagConstraints.WEST;
+        loginPanel.add(goBackButton, loginGbc);
+
+        return loginPanel;
+    }
+
+    private static void performLogin(JFrame mainFrame, JTextField usernameField, JPasswordField passwordField) {
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
+
+        try {
+            String jdbcUrl = "jdbc:mysql://localhost:3306/cdrs";
+            String dbUsername = "root";
+            String dbPassword = "S@nt0sh143";
+            Connection connection = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword);
+
+            String query = "SELECT * FROM admin WHERE username = ? AND password = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                mainFrame.dispose();
+                SwingUtilities.invokeLater(AdMain::createAndShowMainFrame);
+            } else {
+                loginAttempts++;
+                if (loginAttempts >= 3) {
+                    int option = JOptionPane.showConfirmDialog(mainFrame,
+                            "Invalid username or password. Do you want to reset your password?",
+                            "Forget Password", JOptionPane.YES_NO_OPTION);
+                } else {
+                    SwingUtilities.invokeLater(() -> ForgetPasswordDialog.showForgotPasswordDialog(mainFrame));
+                    JOptionPane.showMessageDialog(mainFrame, "Redirecting to Forget Password page.");
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(mainFrame, "Error connecting to the database.");
+        }
+    }
+}

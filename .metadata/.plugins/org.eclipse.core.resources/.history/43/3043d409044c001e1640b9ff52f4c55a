@@ -1,0 +1,33 @@
+package Admin;
+
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+
+import javax.swing.ImageIcon;
+
+public class AdMain{
+	private static ImageIcon resizeImageIcon(ImageIcon icon, int width, int height) {
+		Image image = icon.getImage();
+
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.drawImage(image, 0, 0, width, height, null);
+        g2d.dispose();
+
+        return new ImageIcon(resizedImage);
+    }
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(()->{
+			createAndShowMainFrame();
+		});		}
+	}
+}
+
+
+
+

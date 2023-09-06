@@ -1,0 +1,185 @@
+package View;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class viewPolice extends JFrame {
+    private JTable dataTable;
+
+    public viewPolice() {
+        setTitle("View Police Data");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1200, 400);
+        setLocationRelativeTo(null);
+
+        // Create a DefaultTableModel to hold the data for the JTable
+        DefaultTableModel model = new DefaultTableModel();
+
+        // Add columns to the model
+        model.addColumn("ID");
+        model.addColumn("First Name");
+        model.addColumn("Middle Name");
+        model.addColumn("Last Name");
+        model.addColumn("Username");
+        model.addColumn("Password");
+        model.addColumn("NID or License");
+        model.addColumn("Date of Birth");
+        model.addColumn("Email");
+        model.addColumn("Phone");
+        model.addColumn("Permanent Address");
+        model.addColumn("Temporary Address");
+        model.addColumn("Father's Name");
+        model.addColumn("Mother's Name");
+        model.addColumn("Marital Status");
+        model.addColumn("Education");
+        model.addColumn("Job Join Year");
+        model.addColumn("Photo");
+        model.addColumn("View"); // Add a column for "View" buttons
+
+        // Populate the model with data from the database
+        try {
+            String jdbcUrl = "jdbc:mysql://localhost:3306/cdrs";
+            String dbUsername = "root";
+            String dbPassword = "S@nt0sh143";
+            Connection connection = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword);
+
+            Statement statement = connection.createStatement();
+            String query = "SELECT * FROM police";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                // Extract data from the result set and add it to the model
+                int id = resultSet.getInt("id");
+                String firstName = resultSet.getString("first_name");
+                String middleName = resultSet.getString("middle_name");
+                String lastName = resultSet.getString("last_name");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String nidOrLicense = resultSet.getString("nid_or_license");
+                String dob = resultSet.getString("dob");
+                String email = resultSet.getString("email");
+                String phone = resultSet.getString("phone");
+                String permanentAddress = resultSet.getString("permanent_address");
+                String temporaryAddress = resultSet.getString("temporary_address");
+                String fatherName = resultSet.getString("father_name");
+                String motherName = resultSet.getString("mother_name");
+                String maritalStatus = resultSet.getString("marital_status");
+                String education = resultSet.getString("education");
+                String jobJoinYear = resultSet.getString("job_join_year");
+                String photo = resultSet.getString("photo");
+
+                // Add a row to the model, including a "View" button for each row
+                model.addRow(new Object[]{id, firstName, middleName, lastName, username, password,
+                        nidOrLicense, dob, email, phone, permanentAddress, temporaryAddress,
+                        fatherName, motherName, maritalStatus, education, jobJoinYear, photo,
+                        "View"}); // "View" is a placeholder for the button
+            }
+
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        // Create the JTable with the populated model
+        dataTable = new JTable(model);
+
+        // Create a custom renderer and editor for the "View" column
+        dataTable.getColumnModel().getColumn(model.getColumnCount() - 1).setCellRenderer(new ButtonRenderer());
+        dataTable.getColumnModel().getColumn(model.getColumnCount() - 1).setCellEditor(new ButtonEditor(new JTextField()));
+
+        // Add the JTable to a JScrollPane to enable scrolling
+        JScrollPane scrollPane = new JScrollPane(dataTable);
+
+        // Add the JScrollPane to the frame
+        add(scrollPane);
+
+        setVisible(true);
+    }
+
+    // Custom TableCellRenderer for rendering buttons
+    class ButtonRenderer extends JButton implements TableCellRenderer {
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (isSelected) {
+                setForeground(table.getSelectionForeground());
+                setBackground(table.getSelectionBackground());
+            } else {
+                setForeground(table.getForeground());
+                setBackground(UIManager.getColor("Button.background"));
+            }
+
+            setText((value == null) ? "" : value.toString());
+            return this;
+        }
+    }
+
+    // Custom TableCellEditor for editing buttons
+    class ButtonEditor extends DefaultCellEditor {
+        private JButton button;
+        private String label;
+        private boolean isPushed;
+
+        public ButtonEditor(JTextField textField) {
+            super(textField);
+            button = new JButton();
+            button.setOpaque(true);
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            if (isSelected) {
+                button.setForeground(table.getSelectionForeground());
+                button.setBackground(table.getSelectionBackground());
+            } else {
+                button.setForeground(table.getForeground());
+                button.setBackground(table.getBackground());
+            }
+
+            label = (value == null) ? "" : value.toString();
+            button.setText(label);
+            isPushed = true;
+            return button;
+        }
+
+        public Object getCellEditorValue() {
+            if (isPushed) {
+                // Here, you can handle the action when the "View" button is clicked
+                // For example, you can display a dialog with details for the selected row
+                int selectedRow = dataTable.getSelectedRow();
+                // Extract the ID or other relevant data for the selected row and display details
+            }
+            isPushed = false;
+            return label;
+        }
+
+        public boolean stopCellEditing() {
+            isPushed = false;
+            return super.stopCellEditing();
+        }
+
+        protected void fireEditingStopped() {
+            super.fireEditingStopped();
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new viewPolice());
+    }
+}

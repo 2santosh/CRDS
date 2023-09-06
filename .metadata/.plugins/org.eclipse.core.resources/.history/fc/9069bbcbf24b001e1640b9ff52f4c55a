@@ -1,0 +1,120 @@
+package Admin;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+
+public class AdMain {
+    // ... Existing code ...
+
+    private static class MenuItem {
+        private String name;
+        private String[] subItems;
+        private ActionListener actionListener; // ActionListener for the menu item
+
+        public MenuItem(String name, ActionListener actionListener, String... subItems) {
+            this.name = name;
+            this.actionListener = actionListener;
+            this.subItems = subItems;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String[] getSubItems() {
+            return subItems;
+        }
+
+        public ActionListener getActionListener() {
+            return actionListener;
+        }
+    }
+
+    private static void createAndShowMainFrame() {
+        // ... Existing code ...
+    	JFrame frame = new JFrame("Main Frame");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
+
+        // Create a left-side menu
+        JPanel menuPanel = new JPanel();
+        menuPanel.setBackground(Color.darkGray);
+        menuPanel.setPreferredSize(new Dimension(200, frame.getHeight()));
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+
+        // Create the menu panel and add it to the frame
+        
+
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null); // Center the frame on the screen
+    }
+
+    private static JPanel createMenuPanel() {
+        JPanel menuPanel = new JPanel();
+        menuPanel.setBackground(Color.darkGray);
+        menuPanel.setPreferredSize(new Dimension(200, frame.getHeight()));
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+
+        // Create MenuItem instances and add them to the menuPanel
+        MenuItem[] menuItems = {
+            new MenuItem("Police Station", new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Handle the action for "Police Station" menu item
+                    // For example, load the PoliceStationPanel
+                    // loadPanel(new AddPoliceStationPanel());
+                }
+            }, "Add Police Station", "Manage Police Station"),
+            new MenuItem("Police", new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Handle the action for "Police" menu item
+                    // For example, load the PolicePanel
+                    // loadPanel(new AddPolicePanel());
+                }
+            }, "Add Police", "Manage Police"),
+            // Add other menu items similarly
+        };
+
+        for (MenuItem menuItem : menuItems) {
+            createMenuItem(menuPanel, menuItem.getName(), menuItem.getActionListener(), menuItem.getSubItems());
+        }
+
+        return menuPanel;
+    }
+
+    private static void createMenuItem(JPanel menuPanel, String itemName, ActionListener actionListener, String... subItems) {
+        JButton menuItem = new JButton(itemName);
+        menuItem.setPreferredSize(new Dimension(200, 40));
+        menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+        menuItem.setForeground(Color.WHITE);
+        menuItem.setBackground(Color.decode("#333333"));
+        menuItem.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        menuItem.setHorizontalAlignment(SwingConstants.LEFT);
+
+        JPanel subNavPanel = new JPanel();
+        subNavPanel.setLayout(new BoxLayout(subNavPanel, BoxLayout.Y_AXIS));
+        subNavPanel.setBackground(Color.decode("#333333"));
+        subNavPanel.setVisible(false);
+
+        // Add an ActionListener to the menu item
+        menuItem.addActionListener(actionListener);
+
+        menuPanel.add(menuItem);
+        menuPanel.add(subNavPanel);
+
+        for (String subItem : subItems) {
+            JButton subItemButton = new JButton(subItem);
+            subItemButton.setPreferredSize(new Dimension(180, 30));
+            subItemButton.setFont(new Font("Arial", Font.PLAIN, 12));
+            subItemButton.setForeground(Color.WHITE);
+            subItemButton.setBackground(Color.decode("#444444"));
+            subItemButton.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
+            subNavPanel.add(subItemButton);
+        }
+    }
+
+    // ... Rest of your code ...
+}

@@ -1,0 +1,94 @@
+package Police;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import ProfileDashboard.UserProfilePanel;
+import ProfileDashboard.changePassword;
+import ProfileDashboard.logout;
+
+public class PoMain {
+    private String Username;
+    private static ImageIcon resizeImageIcon(ImageIcon icon, int width, int height) {
+        Image image = icon.getImage();
+
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.drawImage(image, 0, 0, width, height, null);
+        g2d.dispose();
+
+        return new ImageIcon(resizedImage);
+    }
+
+    private void createAndShowMainFrame(String username) {
+        this.Username = username;
+        JFrame frame = new JFrame("Main Frame");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
+
+        // Create the header panel
+        JPanel headerPanel = createHeaderPanel();
+
+        // Create the left-side menu panel
+        JPanel menuPanel = createMenuPanel();
+
+        // Create the center content panel
+        JPanel centerPanel = createCenterPanel();
+
+        frame.add(headerPanel, BorderLayout.NORTH);
+        frame.add(menuPanel, BorderLayout.WEST);
+        frame.add(centerPanel, BorderLayout.CENTER);
+
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
+    }
+
+    private JPanel createHeaderPanel() {
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(Color.lightGray);
+        
+        // ... (header content code)
+        
+        return headerPanel;
+    }
+
+    private JPanel createMenuPanel() {
+        JPanel menuPanel = new JPanel();
+        menuPanel.setBackground(Color.darkGray);
+        menuPanel.setPreferredSize(new Dimension(200, frame.getHeight()));
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+
+        // ... (menu items creation code)
+
+        return menuPanel;
+    }
+
+    private JPanel createCenterPanel() {
+        JPanel centerPanel = new JPanel();
+        centerPanel.setBackground(Color.WHITE);
+        centerPanel.setLayout(new BorderLayout());
+
+        // ... (center content code)
+
+        return centerPanel;
+    }
+
+    // ... (other methods)
+
+    public static void main(String[] args) {
+        // Simulate user login with a username
+        String username = "YourUsername"; // Replace with actual username
+        PoMain poMain = new PoMain();
+        poMain.createAndShowMainFrame(username);
+    }
+}

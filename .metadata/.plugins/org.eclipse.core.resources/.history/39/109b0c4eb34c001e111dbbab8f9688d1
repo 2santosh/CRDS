@@ -1,0 +1,130 @@
+package View;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class viewFirs {
+    private JFrame frame;
+    private JTable table;
+    private DefaultTableModel model;
+
+    public viewFirs() {
+        initialize();
+    }
+
+    private void initialize() {
+        frame = new JFrame("FIR Details");
+        frame.setBounds(100, 100, 800, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        frame.getContentPane().add(panel, BorderLayout.SOUTH);
+
+        JButton addButton = new JButton("Add");
+        panel.add(addButton);
+
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Handle add button click event here
+            }
+        });
+
+        model = new DefaultTableModel();
+        model.addColumn("FIR Number");
+        model.addColumn("Date Filed");
+        model.addColumn("Complainant Name");
+        model.addColumn("Status");
+        model.addColumn("Edit");
+
+        table = new JTable(model);
+        table.getColumn("Edit").setCellRenderer(new ButtonRenderer());
+        table.getColumn("Edit").setCellEditor(new ButtonEditor(new JCheckBox()));
+        
+        JScrollPane scrollPane = new JScrollPane(table);
+        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+    }
+
+    public void setVisible(boolean visible) {
+        frame.setVisible(visible);
+    }
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    viewFirs window = new viewFirs();
+                    window.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    // Button Renderer and Editor classes for the "Edit" button
+    class ButtonRenderer extends JButton implements TableCellRenderer {
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                                                       boolean isSelected, boolean hasFocus, int row, int column) {
+            setText((value == null) ? "" : value.toString());
+            return this;
+        }
+    }
+
+    class ButtonEditor extends DefaultCellEditor {
+        protected JButton button;
+        private String label;
+        private boolean isPushed;
+
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            button = new JButton();
+            button.setOpaque(true);
+            button.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                                                     boolean isSelected, int row, int column) {
+            if (isSelected) {
+                button.setForeground(table.getSelectionForeground());
+                button.setBackground(table.getSelectionBackground());
+            } else {
+                button.setForeground(table.getForeground());
+                button.setBackground(UIManager.getColor("Button.background"));
+            }
+
+            label = (value == null) ? "" : value.toString();
+            button.setText(label);
+            isPushed = true;
+            return button;
+        }
+
+        public Object getCellEditorValue() {
+            if (isPushed) {
+                // Handle edit button click event here
+                // You can use the row and column variables to identify the clicked row and perform editing
+            }
+            isPushed = false;
+            return label;
+        }
+
+        public boolean stopCellEditing() {
+            isPushed = false;
+            return super.stopCellEditing();
+        }
+
+        protected void fireEditingStopped() {
+            super.fireEditingStopped();
+        }
+    }
+}

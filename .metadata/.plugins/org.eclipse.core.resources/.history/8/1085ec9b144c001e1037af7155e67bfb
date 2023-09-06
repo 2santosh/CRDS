@@ -1,0 +1,45 @@
+package ProfileDashboard;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class logout {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new logout().createAndShowGUI();
+        });
+    }
+
+    private JFrame frame;
+    private JPanel contentPane;
+
+    public void createAndShowGUI() {
+        frame = new JFrame("Logout Example");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300, 200);
+
+        contentPane = new JPanel();
+        contentPane.setLayout(new BorderLayout());
+
+        JLabel welcomeLabel = new JLabel("Welcome, User!");
+        contentPane.add(welcomeLabel, BorderLayout.CENTER);
+
+        JButton logoutButton = new JButton("Logout");
+        contentPane.add(logoutButton, BorderLayout.SOUTH);
+
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Perform logout actions here
+                JOptionPane.showMessageDialog(frame, "Logged out successfully.");
+                // Close the current window or navigate to the login screen
+                frame.dispose();
+                // You can replace the above line with code to navigate to your login screen
+            }
+        });
+
+        frame.setContentPane(contentPane);
+        frame.setVisible(true);
+    }
+}

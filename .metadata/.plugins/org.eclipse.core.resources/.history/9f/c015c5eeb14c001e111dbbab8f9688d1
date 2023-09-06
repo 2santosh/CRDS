@@ -1,0 +1,107 @@
+package Edit;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+public class editPoliceStations {
+    private JFrame frame;
+    private JTable policeStationTable;
+    private JButton editButton;
+    private List<PoliceStation> policeStations; // Populate this list from the database
+
+    public class PoliceStation {
+        private int id;
+        private String name;
+        private String address;
+        private String phoneNumber;
+        // Add more fields as needed
+
+        // Constructors, getters, and setters
+    }
+
+    public editPoliceStations() {
+        frame = new JFrame("Edit Police Stations");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 400);
+        frame.setLayout(new BorderLayout());
+
+        // Create a JTable to display police stations
+        policeStationTable = new JTable();
+        JScrollPane scrollPane = new JScrollPane(policeStationTable);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        // Create an "Edit" button
+        editButton = new JButton("Edit");
+        editButton.addActionListener(e -> editSelectedPoliceStation());
+        frame.add(editButton, BorderLayout.SOUTH);
+
+        // Populate the table with police station data
+        populatePoliceStations(); // Load data from the database and populate the list
+
+        frame.setVisible(true);
+    }
+
+    private void populatePoliceStations() {
+        // Load police station data from the database and populate the policeStations list
+        // Then update the JTable with this data
+    }
+
+    private void editSelectedPoliceStation() {
+        int selectedRow = policeStationTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            // Get the selected police station from the list
+            PoliceStation selectedPoliceStation = policeStations.get(selectedRow);
+
+            // Create a new JFrame or dialog to display the editable fields
+            JFrame editFrame = new JFrame("Edit Police Station");
+            editFrame.setSize(400, 300);
+
+            JPanel editPanel = new JPanel(new GridLayout(4, 2)); // Adjust the grid layout as needed
+
+            JTextField nameField = new JTextField(selectedPoliceStation.getName());
+            JTextField addressField = new JTextField(selectedPoliceStation.getAddress());
+            JTextField phoneNumberField = new JTextField(selectedPoliceStation.getPhoneNumber());
+
+            editPanel.add(new JLabel("Name:"));
+            editPanel.add(nameField);
+            editPanel.add(new JLabel("Address:"));
+            editPanel.add(addressField);
+            editPanel.add(new JLabel("Phone Number:"));
+            editPanel.add(phoneNumberField);
+
+            JButton saveButton = new JButton("Save");
+            saveButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Retrieve the edited values from the text fields
+                    String editedName = nameField.getText();
+                    String editedAddress = addressField.getText();
+                    String editedPhoneNumber = phoneNumberField.getText();
+
+                    // Update the selectedPoliceStation object with the edited values
+                  /*  selectedPoliceStation.setName(editedName);
+                    selectedPoliceStation.setAddress(editedAddress);
+                    selectedPoliceStation.setPhoneNumber(editedPhoneNumber);
+
+                 */   // Save the changes back to the database (implement this logic)
+                    // Close the editFrame
+                    editFrame.dispose();
+                }
+            });
+
+            editPanel.add(saveButton);
+
+            editFrame.add(editPanel);
+            editFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(frame, "Please select a police station to edit.");
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new editPoliceStations());
+    }
+}

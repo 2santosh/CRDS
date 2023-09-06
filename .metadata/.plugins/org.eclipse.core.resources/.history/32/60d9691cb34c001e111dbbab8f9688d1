@@ -1,0 +1,71 @@
+package View;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class viewCriminal {
+    private JFrame frame;
+    private JTable table;
+    private DefaultTableModel model;
+
+    public viewCriminal() {
+        initialize();
+    }
+
+    private void initialize() {
+        frame = new JFrame("Criminal Data");
+        frame.setBounds(100, 100, 800, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        frame.getContentPane().add(panel, BorderLayout.SOUTH);
+
+        JButton addButton = new JButton("Add");
+        panel.add(addButton);
+
+        JButton editButton = new JButton("Edit");
+        panel.add(editButton);
+
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Handle add button click event here
+            }
+        });
+
+        editButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Handle edit button click event here
+            }
+        });
+
+        model = new DefaultTableModel();
+        model.addColumn("ID");
+        model.addColumn("Name");
+        model.addColumn("Age");
+        model.addColumn("Crime");
+
+        table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+    }
+
+    public void setVisible(boolean visible) {
+        frame.setVisible(visible);
+    }
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    viewCriminal window = new viewCriminal();
+                    window.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+}

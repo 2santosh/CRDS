@@ -1,0 +1,137 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+public class editPoliceStations {
+    private JFrame frame;
+    private JTable policeStationTable;
+    private JButton editButton;
+    private List<PoliceStation> policeStations;
+
+    public class PoliceStation {
+        private int id;
+        private String name;
+        private String address;
+        private String phoneNumber;
+
+        public PoliceStation(int id, String name, String address, String phoneNumber) {
+            this.id = id;
+            this.name = name;
+            this.address = address;
+            this.phoneNumber = phoneNumber;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+    }
+
+    public editPoliceStations() {
+        frame = new JFrame("Edit Police Stations");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 400);
+        frame.setLayout(new BorderLayout());
+
+        // Create sample data for demonstration
+        policeStations = new ArrayList<>();
+        policeStations.add(new PoliceStation(1, "Station 1", "Address 1", "123-456-7890"));
+        policeStations.add(new PoliceStation(2, "Station 2", "Address 2", "987-654-3210"));
+
+        // Create a JTable to display police stations
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID");
+        model.addColumn("Name");
+        model.addColumn("Address");
+        model.addColumn("Phone Number");
+
+        for (PoliceStation station : policeStations) {
+            model.addRow(new Object[]{station.getId(), station.getName(), station.getAddress(), station.getPhoneNumber()});
+        }
+
+        policeStationTable = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(policeStationTable);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        // Create an "Edit" button
+        editButton = new JButton("Edit");
+        editButton.addActionListener(e -> editSelectedPoliceStation());
+        frame.add(editButton, BorderLayout.SOUTH);
+
+        frame.setVisible(true);
+    }
+
+    private void editSelectedPoliceStation() {
+        int selectedRow = policeStationTable.getSelectedRow();
+        if (selectedRow >= 0) {
+            // Get the selected police station from the list
+            PoliceStation selectedPoliceStation = policeStations.get(selectedRow);
+
+            // Create a new JFrame or dialog to display the editable fields
+            JFrame editFrame = new JFrame("Edit Police Station");
+            editFrame.setSize(400, 300);
+
+            JPanel editPanel = new JPanel(new GridLayout(4, 2)); // Adjust the grid layout as needed
+
+            JTextField nameField = new JTextField(selectedPoliceStation.getName());
+            JTextField addressField = new JTextField(selectedPoliceStation.getAddress());
+            JTextField phoneNumberField = new JTextField(selectedPoliceStation.getPhoneNumber());
+
+            editPanel.add(new JLabel("Name:"));
+            editPanel.add(nameField);
+            editPanel.add(new JLabel("Address:"));
+            editPanel.add(addressField);
+            editPanel.add(new JLabel("Phone Number:"));
+            editPanel.add(phoneNumberField);
+
+            JButton saveButton = new JButton("Save");
+            saveButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Retrieve the edited values from the text fields
+                    String editedName = nameField.getText();
+                    String editedAddress = addressField.getText();
+                    String editedPhoneNumber = phoneNumberField.getText();
+
+                    // Update the selectedPoliceStation object with the edited values
+                    selectedPoliceStation.name = editedName;
+                    selectedPoliceStation.address = editedAddress;
+                    selectedPoliceStation.phoneNumber = editedPhoneNumber;
+
+                    // Update the table with the edited values
+                    policeStationTable.setValueAt(editedName, selectedRow, 1);
+                    policeStationTable.setValueAt(editedAddress, selectedRow, 2);
+                    policeStationTable.setValueAt(editedPhoneNumber, selectedRow, 3);
+
+                    // Close the editFrame
+                    editFrame.dispose();
+                }
+            });
+
+            editPanel.add(saveButton);
+
+            editFrame.add(editPanel);
+            editFrame.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(frame, "Please select a police station to edit.");
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new editPoliceStations());
+    }
+}

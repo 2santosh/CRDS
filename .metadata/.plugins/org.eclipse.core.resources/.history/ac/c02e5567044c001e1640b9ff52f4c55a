@@ -1,0 +1,55 @@
+package Admin;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+public class AdMain{
+	private static ImageIcon resizeImageIcon(ImageIcon icon, int width, int height) {
+		Image image = icon.getImage();
+
+        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.drawImage(image, 0, 0, width, height, null);
+        g2d.dispose();
+
+        return new ImageIcon(resizedImage);
+    }
+	
+	
+	public static void createAndShowMainFrame() {
+		JFrame frame = new JFrame("Main Frame");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
+
+        // Create a left-side menu
+        JPanel menuPanel = new JPanel();
+        menuPanel.setBackground(Color.darkGray);
+        menuPanel.setPreferredSize(new Dimension(200, frame.getHeight()));
+        menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
+
+	}
+	
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(()->{
+			createAndShowMainFrame();
+		});		
+	}
+}
+
+
+
+

@@ -1,0 +1,33 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class AdMain extends JFrame {
+    private JLabel usernameLabel;
+
+    public AdMain(String username) {
+        setTitle("Main Frame");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+
+        // ... (Header code as before)
+
+        usernameLabel = new JLabel("Username: " + username);
+        userPanel.add(usernameLabel);
+
+        // ... (Rest of your main frame code)
+
+        add(topPanel, BorderLayout.NORTH);
+
+        // ... (Rest of your main frame code)
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            // For demonstration purposes, create a main frame with a username "Admin"
+            AdMain adMain = new AdMain("Admin");
+            adMain.setVisible(true);
+        });
+    }
+}

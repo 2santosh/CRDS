@@ -1,0 +1,71 @@
+package View;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class viewPolice extends JFrame {
+    private JTable dataTable;
+
+    public ViewPoliceData() {
+        setTitle("View Police Data");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 400);
+        setLocationRelativeTo(null);
+
+        // Create a DefaultTableModel to hold the data for the JTable
+        DefaultTableModel model = new DefaultTableModel();
+
+        // Add columns to the model
+        model.addColumn("ID");
+        model.addColumn("Name");
+        model.addColumn("Badge Number");
+        // Add more columns as needed
+
+        // Populate the model with data from the database
+        try {
+            String jdbcUrl = "jdbc:mysql://localhost:3306/cdrs";
+            String dbUsername = "root";
+            String dbPassword = "S@nt0sh143";
+            Connection connection = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword);
+
+            Statement statement = connection.createStatement();
+            String query = "SELECT * FROM police";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                // Extract data from the result set and add it to the model
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String badgeNumber = resultSet.getString("badge_number");
+
+                // Add a row to the model
+                model.addRow(new Object[]{id, name, badgeNumber});
+            }
+
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        // Create the JTable with the populated model
+        dataTable = new JTable(model);
+
+        // Add the JTable to a JScrollPane to enable scrolling
+        JScrollPane scrollPane = new JScrollPane(dataTable);
+
+        // Add the JScrollPane to the frame
+        add(scrollPane);
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new ViewPoliceData());
+    }
+}

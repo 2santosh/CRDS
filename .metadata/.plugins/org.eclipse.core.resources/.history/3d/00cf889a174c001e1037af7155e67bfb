@@ -1,0 +1,39 @@
+package ProfileDashboard;
+import javax.swing.*;
+
+import Police.PoMain;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import Main.MainPage;
+
+public class logout {
+    private JFrame frame;
+    private JPanel contentPane;
+
+    public void createAndShowGUI() {
+        frame = new JFrame("Logout Example");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                contentPane = new JPanel();
+        contentPane.setLayout(new BorderLayout());
+
+     
+        JButton logoutButton = new JButton("Logout");
+        contentPane.add(logoutButton, BorderLayout.SOUTH);
+
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	createAndShowMainFrame.dispose();
+                PoMain poMain = new PoMain();
+                JOptionPane.showMessageDialog(frame, "Logged out successfully.");
+                frame.dispose();
+            }
+        });
+
+        frame.setContentPane(contentPane);
+        frame.setVisible(true);
+    }
+}

@@ -1,0 +1,53 @@
+package Police;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import ProfileDashboard.UserProfilePanel;
+import ProfileDashboard.changePassword;
+import ProfileDashboard.logout;
+
+public class PoMain {
+    private String Username;
+
+    // ... (previous code here)
+
+    private void createAndShowMainFrame(String username) {
+        this.Username = username;
+        JFrame frame = new JFrame("Main Frame");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
+
+        // Create a left-side menu
+        JPanel menuPanel = createMenuPanel();
+        frame.add(menuPanel, BorderLayout.WEST);
+
+        // Create a top panel for header and user info
+        JPanel topPanel = createTopPanel();
+        frame.add(topPanel, BorderLayout.NORTH);
+
+        // Create the center area to display menu details
+        JPanel centerPanel = createCenterPanel();
+        frame.add(centerPanel, BorderLayout.CENTER);
+
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
+    }
+
+    // ... (previous code here)
+
+    public static void main(String[] args) {
+        // Simulate user login with a username
+        String username = "YourUsername"; // Replace with actual username
+        PoMain app = new PoMain();
+        app.createAndShowMainFrame(username);
+    }
+}
